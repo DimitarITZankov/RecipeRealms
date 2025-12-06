@@ -1,8 +1,19 @@
-from django.urls import path
+from django.urls import path, include
 from user import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('me', views.UserProfileViewSet)
 
 urlpatterns = [
+	# JWT Endpoints
 	path('jwt/create', TokenObtainPairView.as_view(), name='jwt-create'),
 	path('jwt/refresh', TokenRefreshView.as_view(), name='jwt-refresh'),
+
+	#Register Endpoint
+	path('register/', views.RegisterUserViewSet.as_view(),name='register'),
+
+	# Router Endpoints
+	path('', include(router.urls)),
 ]
