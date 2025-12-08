@@ -7,6 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from user import serializers
 from core import models
+from rest_framework import permissions
 
 # Register API
 class RegisterUserViewSet(generics.CreateAPIView):
@@ -32,3 +33,17 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 	# Return only the logged-in user
 	def get_queryset(self):
 		return self.queryset.filter(pk=self.request.user.pk) # Primary key
+
+# Create View for change password
+class ChangePasswordView(generics.UpdateAPIView):
+	serializer_class = serializers.ChangePasswordSerializer
+	permission_classes = [permissions.IsAuthenticated,]
+
+	def get_object(self):
+		return self.request.user
+
+	def perform_update(self,serializer):
+		user = self.request.user
+		new_password = serializer.validated_data['new_password_first']
+		user.set_password(new_password)
+		user.save()

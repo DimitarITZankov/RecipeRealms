@@ -11,8 +11,11 @@ urlpatterns = [
 	path('jwt/create', TokenObtainPairView.as_view(), name='jwt-create'),
 	path('jwt/refresh', TokenRefreshView.as_view(), name='jwt-refresh'),
 
-	#Register Endpoint
+	# Register Endpoint
 	path('register/', views.RegisterUserViewSet.as_view(),name='register'),
+
+	# Change Password Endpoint
+	path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
 
 	# Router Endpoints
 	path('', include(router.urls)),
