@@ -14,6 +14,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 		user = get_user_model().objects.create_user(**validated_data)
 		return user
 
+	def validate_password(self, value):
+		# Validate the password using Django's built-in validators
+		validate_password(value)
+		return value
+
 class ChangePasswordSerializer(serializers.Serializer):
 	# Change password
 	old_password = serializers.CharField(write_only=True)

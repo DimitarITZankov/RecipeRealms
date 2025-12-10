@@ -3,6 +3,9 @@ from user import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.routers import DefaultRouter
 
+# This is used for out test case where its searching for user in the URL (reverse function)
+app_name = 'user'
+
 router = DefaultRouter()
 router.register('me', views.UserProfileViewSet)
 
