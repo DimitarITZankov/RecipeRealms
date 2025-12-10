@@ -1,6 +1,7 @@
 # Models for the database
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser,PermissionsMixin,BaseUserManager,)
+from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
 	# Create Custom base user manager
@@ -44,3 +45,12 @@ class User(AbstractBaseUser,PermissionsMixin):
 		return self.name
 	def __str__(self):
 		return self.username
+
+class Recipes(models.Model):
+	# Create table for the recipes
+	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+	title = models.CharField(max_length=50)
+	description = models.TextField(blank=True)
+	products = models.CharField(max_length=255)
+	time_minutes = models.IntegerField()
+	difficulty = models.CharField(max_length=15)
