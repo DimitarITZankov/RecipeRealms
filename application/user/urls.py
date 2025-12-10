@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 app_name = 'user'
 
 router = DefaultRouter()
-router.register('me', views.UserProfileViewSet)
+router.register('me', views.UserProfileViewSet,basename='me')
 
 urlpatterns = [
 	# JWT Endpoints
