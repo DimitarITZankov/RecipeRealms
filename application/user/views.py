@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from user import serializers
 from core import models
 from rest_framework import permissions
+from rest_framework.authtoken.models import Token
 
 # Register API
 class RegisterUserViewSet(generics.CreateAPIView):
@@ -37,6 +38,20 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 # Create View for change password
 class ChangePasswordView(generics.UpdateAPIView):
 	serializer_class = serializers.ChangePasswordSerializer
+	permission_classes = [permissions.IsAuthenticated,]
+
+	def get_object(self):
+		return self.request.user
+
+	def perform_update(self,serializer):
+		user = self.request.user
+		new_password = serializer.validated_data['new_password_first']
+		user.set_password(new_password)
+		user.save()
+
+# Create View for reset password
+class ResetPasswordView(generics.UpdateAPIView):
+	serializer_class = serializers.ResetPasswordSerializer
 	permission_classes = [permissions.IsAuthenticated,]
 
 	def get_object(self):
