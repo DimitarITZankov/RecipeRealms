@@ -50,7 +50,7 @@ class Recipes(models.Model):
 	# Create table for the recipes
 	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
 	title = models.CharField(max_length=50)
-	description = models.TextField(blank=True)
+	description = models.TextField(max_length=1000)
 	products = models.CharField(max_length=255)
 	time_minutes = models.IntegerField()
 	difficulty = models.CharField(max_length=15)

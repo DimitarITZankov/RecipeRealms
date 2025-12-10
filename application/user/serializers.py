@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 
 class RegisterSerializer(serializers.ModelSerializer):
 	# Create Register serializer
-	password = serializers.CharField(write_only=True)
+	password = serializers.CharField(write_only=True,style={'input_type': 'password'})
 	class Meta:
 		model = get_user_model()
 		fields = ['name','email','username','secret_keyword','password']
