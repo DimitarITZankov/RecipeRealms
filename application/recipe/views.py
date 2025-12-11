@@ -3,11 +3,15 @@ from recipe import serializers, permissions
 from core import models
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 class RecipeViewSet(viewsets.ModelViewSet):
 	serializer_class = serializers.RecipeDetailSerializer
 	permission_classes = [IsAuthenticated,permissions.IsOwnerOrReadOnly]
 	queryset = models.Recipes.objects.all()
+	filter_backends = [DjangoFilterBackend]
+	filterset_fields = ['tags','title']
+
 
 	def get_queryset(self):
 	# Return recipes for the authenticated user

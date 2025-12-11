@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'user',
     'recipe',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -131,7 +132,8 @@ STATIC_URL = 'static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

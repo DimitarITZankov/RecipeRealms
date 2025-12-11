@@ -24,4 +24,4 @@ EXPOSE 4000
 USER django-user
 
 # Default command
-CMD ["python", "manage.py", "runserver", "0.0.0.0:4000"]
+CMD ["/py/bin/python", "manage.py", "runserver", "0.0.0.0:4000"]

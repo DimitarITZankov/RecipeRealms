@@ -18,9 +18,9 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 	def _get_or_create_tags(self, tags, recipe):
 		# Handle creating or getting tag if needed (tags are global, not attached per user)
-    for tag in tags:
-        tag_obj, created = models.Tag.objects.get_or_create(name=tag['name'])
-        recipe.tags.add(tag_obj)
+		for tag in tags:
+			tag_obj, created = models.Tag.objects.get_or_create(name=tag['name'])
+			recipe.tags.add(tag_obj)
 
 	def create(self, validated_data):
 		time = validated_data['time_minutes']
