@@ -16,12 +16,11 @@ class RecipeSerializer(serializers.ModelSerializer):
 		fields = ['id','author','title','time_minutes','difficulty','tags']
 		read_only_fields = ('id','author','difficulty')
 
-	def _get_or_create_tags(self,tags,recipe):
-		# Handle getting or creating tags if needed
-		auth_user = self.context['request'].user
-		for tag in tags:
-			tag_obj, created = models.Tag.objects.get_or_create(author=auth_user, **tag)
-			recipe.tags.add(tag_obj)
+	def _get_or_create_tags(self, tags, recipe):
+		# Handle creating or getting tag if needed (tags are global, not attached per user)
+    for tag in tags:
+        tag_obj, created = models.Tag.objects.get_or_create(name=tag['name'])
+        recipe.tags.add(tag_obj)
 
 	def create(self, validated_data):
 		time = validated_data['time_minutes']
