@@ -1,12 +1,27 @@
 from rest_framework import serializers
 from core import models
 
+class TagSerializer(serializers.ModelSerializer):
+	# Serializers for tags
+	class Meta:
+		model = models.Tag
+		fields = ['id','name']
+		read_only_fields = ['id']
+
 class RecipeSerializer(serializers.ModelSerializer):
 	# Create serializer for creating a recipes
+	tags = TagSerializer(many=True, required=False)
 	class Meta:
 		model = models.Recipes
-		fields = ['id','author','title','time_minutes','difficulty',]
+		fields = ['id','author','title','time_minutes','difficulty','tags']
 		read_only_fields = ('id','author','difficulty')
+
+	def _get_or_create_tags(self,tags,recipe):
+		# Handle getting or creating tags if needed
+		auth_user = self.context['request'].user
+		for tag in tags:
+			tag_obj, created = models.Tag.objects.get_or_create(author=auth_user, **tag)
+			recipe.tags.add(tag_obj)
 
 	def create(self, validated_data):
 		time = validated_data['time_minutes']
@@ -17,7 +32,9 @@ class RecipeSerializer(serializers.ModelSerializer):
 			validated_data['difficulty'] = 'Medium'
 		else:
 			validated_data['difficulty'] = 'Hard'
+		tags = validated_data.pop('tags',[])
 		recipe = models.Recipes.objects.create(**validated_data)
+		self._get_or_create_tags(tags,recipe)
 		return recipe
 
 	def update(self,instance,validated_data):
@@ -29,14 +46,14 @@ class RecipeSerializer(serializers.ModelSerializer):
 			instance.difficulty = 'Medium'
 		else:
 			instance.difficulty = 'Hard'
+		tags = validated_data.pop('tags',None)
+		if tags is not None:
+			instance.tags.clear()
+			self._get_or_create_tags(tags,instance)
 		for attr,value in validated_data.items():
 			setattr(instance,attr,value)
 		instance.save()
 		return instance
-
-	def get_author_name(self, obj):
-		# Get the author's name instead of ID by default
-		return obj.author.name
 
 class RecipeDetailSerializer(RecipeSerializer):
 	# Create a detailed view serializer for the recipes

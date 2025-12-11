@@ -54,3 +54,15 @@ class Recipes(models.Model):
 	products = models.CharField(max_length=255)
 	time_minutes = models.IntegerField()
 	difficulty = models.CharField(max_length=15)
+	tags = models.ManyToManyField('Tag')
+
+	def __str__(self):
+		return self.title
+
+class Tag(models.Model):
+	# Adding table for tags
+	name = models.CharField(max_length=255)
+	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.name
