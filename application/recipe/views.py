@@ -1,16 +1,16 @@
 from django.shortcuts import render
 from recipe import serializers, permissions
 from core import models
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
 class RecipeViewSet(viewsets.ModelViewSet):
 	serializer_class = serializers.RecipeDetailSerializer
 	permission_classes = [IsAuthenticated,permissions.IsOwnerOrReadOnly]
 	queryset = models.Recipes.objects.all()
 	filter_backends = [DjangoFilterBackend]
-	filterset_fields = ['tags','title']
+	filterset_fields = ['tags','title','products__name']
 
 
 	def get_queryset(self):
@@ -27,3 +27,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
 			return serializers.RecipeSerializer
 		return self.serializer_class
 
+class ProductsViewSet(mixins.RetrieveModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
+	# Manage products in the database
+	serializer_class = serializers.ProductsSerializer
+	authentication_classes = [JWTAuthentication,]
+	permission_classes = [IsAuthenticated,]
+	queryset = models.Products.objects.all()
+	filter_backends = [DjangoFilterBackend]
+	filterset_fields = ['name']
+
+	def get_queryset(self):
+		# Show only products by the authenticated user
+		return self.queryset.filter(author=self.request.user).order_by('-name')
