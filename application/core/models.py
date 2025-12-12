@@ -63,6 +63,8 @@ class Tag(models.Model):
 	# Adding table for tags
 	name = models.CharField(max_length=255)
 	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+	class Meta:
+		unique_together = ('name','author')
 
 	def __str__(self):
 		return self.name
@@ -72,5 +74,7 @@ class Products(models.Model):
 	# Create a products table for storing all the products
 	name = models.CharField(max_length=255)
 	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+	class Meta:
+		unique_together = ('name','author')
 	def __str__(self):
 		return self.name
