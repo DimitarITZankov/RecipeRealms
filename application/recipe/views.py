@@ -32,11 +32,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
 			return serializers.RecipeImageSerializer
 		return self.serializer_class
 
-	@action(methods=['POST'],detail=True,url_path='upload-image')
+	@action(methods=['POST','PATCH','PUT','DELETE'],detail=True,url_path='upload-image')
 	def upload_image(self,request,pk=None):
 		# Upload an image to recipe
 		recipe = self.get_object()
-		serializer = self.get_serializer(recipe,data=request.data)
+		if request.method == 'DELETE':
+			# Remove the image file and save it
+			recipe.image.delete(save=True)
+			serializer= self.get_serializer(recipe)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+
+		serializer = self.get_serializer(recipe,data=request.data,partial=True)
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data,status=status.HTTP_200_OK)

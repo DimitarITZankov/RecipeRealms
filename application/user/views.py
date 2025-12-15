@@ -64,6 +64,7 @@ class ResetPasswordView(generics.UpdateAPIView):
 		user.set_password(new_password)
 		user.save()
 
+# Create View for uploading profile image
 class UploadProfileImageView(generics.UpdateAPIView):
     serializer_class = serializers.ProfileImageSerializer
     authentication_classes = [JWTAuthentication]
