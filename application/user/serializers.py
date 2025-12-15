@@ -8,7 +8,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(write_only=True,style={'input_type': 'password'})
 	class Meta:
 		model = get_user_model()
-		fields = ['name','email','username','secret_keyword','password']
+		fields = ['id','name','email','username','secret_keyword','password','profile_image']
 		extra_kwargs = {'password':{'write_only':True,'style':{'input_type':'password'}},'secret_keyword':{'write_only':True,'style':{'input_type':'password'}}}
 	def create(self,validated_data):
 		user = get_user_model().objects.create_user(**validated_data)
@@ -60,3 +60,11 @@ class ResetPasswordSerializer(serializers.Serializer):
 		# Validate the password using Django's password validator
 		validate_password(attrs['new_password_first'])
 		return attrs
+
+class ProfileImageSerializer(serializers.ModelSerializer):
+	# Serializer for uploading a profile image
+	class Meta:
+		model = models.User
+		fields = ['id','profile_image']
+		read_only_fields = ['id']
+		extra_kwargs = {'profile_image':{'required':True}}

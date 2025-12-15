@@ -9,6 +9,7 @@ from user import serializers
 from core import models
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
 
 # Register API
 class RegisterUserViewSet(generics.CreateAPIView):
@@ -62,3 +63,24 @@ class ResetPasswordView(generics.UpdateAPIView):
 		new_password = serializer.validated_data['new_password_first']
 		user.set_password(new_password)
 		user.save()
+
+class UploadProfileImageView(generics.UpdateAPIView):
+    serializer_class = serializers.ProfileImageSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Optional: allow POST too
+        return self.patch(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        user.profile_image.delete(save=True)  # Deletes the file and updates the model
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)

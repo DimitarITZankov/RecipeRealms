@@ -11,6 +11,12 @@ def recipe_image_file_path(instance,filename):
 	filename = f'{uuid.uuid4()}{ext}'
 	return os.path.join('uploads','recipe',filename)
 
+def profile_image_file_path(instance,filename):
+	# Generate filepath for the new recipe image
+	ext = os.path.splitext(filename)[1]
+	filename = f'{uuid.uuid4()}{ext}'
+	return os.path.join('uploads','profile',filename)
+
 class CustomUserManager(BaseUserManager):
 	# Create Custom base user manager
 	# Create basic user
@@ -35,7 +41,8 @@ class User(AbstractBaseUser,PermissionsMixin):
 	name = models.CharField(max_length=50)
 	email = models.EmailField(max_length=255,unique=True)
 	username = models.CharField(max_length=30,unique=True)
-	secret_keyword = models.CharField(max_length=255,null=False)
+	secret_keyword = models.CharField(max_length=255,null=False,blank=False)
+	profile_image = models.ImageField(null=True,blank=True,upload_to=profile_image_file_path)
 	is_staff = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
 

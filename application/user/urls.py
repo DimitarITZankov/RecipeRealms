@@ -23,6 +23,9 @@ urlpatterns = [
 	# Reset Password Endpoint
 	path('reset-password/', views.ResetPasswordView.as_view(), name='reset-password'),
 
+	# Upload Profile Image Endpoint
+	path('me/upload-profile-image/', views.UploadProfileImageView.as_view(), name='upload-profile-image'),
+
 	# Router Endpoints
 	path('', include(router.urls)),
 ]
