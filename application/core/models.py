@@ -94,3 +94,14 @@ class Products(models.Model):
 		unique_together = ('name','author')
 	def __str__(self):
 		return self.name
+
+
+class Comments(models.Model):
+	# Create a comments table for storing all the comments for each recipe
+	content = models.TextField(max_length=500)
+	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+	created_at = models.DateTimeField(auto_now_add=True)
+	recipe = models.ForeignKey('Recipes',related_name='comments',on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.author.username

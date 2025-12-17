@@ -1,6 +1,19 @@
 from rest_framework import serializers
 from core import models
 
+
+class CommentsSerializer(serializers.ModelSerializer):
+	# Serializer for posting comments to a recipes
+	author = serializers.SerializerMethodField()
+	class Meta:
+		model = models.Comments
+		fields = ['id','author','content','created_at']
+		read_only_fields = ['id','author','created_at']
+
+	def get_author(self, obj):
+		return obj.author.username
+
+
 class ProductsSerializer(serializers.ModelSerializer):
 	# Create a serializer for the products
 	class Meta:
@@ -19,9 +32,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 	# Create serializer for creating a recipes
 	tags = TagSerializer(many=True, required=False)
 	products = ProductsSerializer(many=True, required=False)
+	comments = CommentsSerializer(many=True,required=False)
 	class Meta:
 		model = models.Recipes
-		fields = ['id','author','title','time_minutes','difficulty','tags','products']
+		fields = ['id','author','title','time_minutes','difficulty','tags','products','comments']
 		read_only_fields = ('id','author','difficulty')
 
 	def _get_or_create_products(self,products,recipe):

@@ -48,6 +48,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
 			return Response(serializer.data,status=status.HTTP_200_OK)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+	@action(methods=['POST','DELETE'], detail=True,url_path='post-comment')
+	def post_comment(self, request, pk=None):
+		# Post a comment to a recipe
+		recipe = self.get_object()  # get recipe by pk
+		if request.method == 'DELETE':
+			# Which comment to delete (pass comment_id)
+			comment_id = request.data.get('comment_id')
+			if not comment_id:
+				return Response({"detail": "comment_id is required"}, status=400)
+			try:
+				comment = recipe.comments.get(id=comment_id, author=request.user)
+				comment.delete()
+				return Response({"detail": "Comment deleted"}, status=204)
+			except models.Comments.DoesNotExist:
+				return Response({"detail": "Comment not found or not allowed"}, status=404)
+		serializer = serializers.CommentsSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save(author=request.user, recipe=recipe)
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ProductsViewSet(mixins.RetrieveModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
 	# Manage products in the database
 	serializer_class = serializers.ProductsSerializer
