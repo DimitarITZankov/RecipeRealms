@@ -69,6 +69,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+	@action(methods=['GET'], detail=True,url_path='comments')
+	def list_comments(self,request,pk=None):
+		recipe = self.get_object()
+		serializer = serializers.CommentsSerializer(recipe.comments.all(),many=True)
+		return Response(serializer.data)
+
 class ProductsViewSet(mixins.RetrieveModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
 	# Manage products in the database
 	serializer_class = serializers.ProductsSerializer
