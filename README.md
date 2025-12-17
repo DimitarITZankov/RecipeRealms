@@ -52,6 +52,7 @@ A RESTful backend API for managing recipes, tags, products and comments built wi
 2.Build and run the docker image
 `docker compose up --build`
 
+### ------------------------------
 
 ```md
 ## Author
