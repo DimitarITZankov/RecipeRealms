@@ -52,6 +52,19 @@ A RESTful backend API for managing recipes, tags, products and comments built wi
 2.Build and run the docker image
 `docker compose up --build`
 
+## How to setup the project
+1. After installation, the server will be running on your localhost at: `http://localhost:4000/`
+2. You can start exploring all endpoints from the main page: `http://localhost:4000/`
+
+## How to use JWT Authentication
+1. First, register a new account at: `http://localhost:4000/api/user/register/`
+2. Log in using your credentials at: `http://localhost:4000/api/user/jwt-create/`
+3. After logging in successfully, you will receive **two tokens**:
+   - `access` token → use this in the **Authorization header** for all requests requiring authentication.
+   - `refresh` token → use this to refresh your access token when it expires.
+4. Example of using the `access` token in request headers:
+  - `Authorization: Bearer <your_access_token>`
+
 ### ------------------------------
 
 ```md
