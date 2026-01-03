@@ -21,7 +21,7 @@ A RESTful backend API for managing recipes, tags, products and comments built wi
 
 ### Authentication
 - POST /api/user/register/
-- POST /api/user/token/
+- POST /api/user/jwt-login/
 
 ### Recipes
 - GET /api/recipe/recipes/
@@ -99,6 +99,11 @@ To run all automated tests for the project:
 pip install -r requirements.txt
 ```
 
+2. Run in the terminal while you are in the project's root:
+
+```bash
+docker compose run --rm app sh -c "python manage.py test"
+```
 
 ### ------------------------------
 
